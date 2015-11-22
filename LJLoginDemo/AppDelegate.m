@@ -1,12 +1,17 @@
 //
 //  AppDelegate.m
-//  LJLoginDemo
+//  LogInDemo
 //
 //  Created by 成都千锋 on 15/11/14.
 //  Copyright (c) 2015年 成都千锋. All rights reserved.
 //
 
 #import "AppDelegate.h"
+#import "ViewController.h"
+
+#import <ShareSDK/ShareSDK.h>
+
+#import <Parse/Parse.h>
 
 @interface AppDelegate ()
 
@@ -17,7 +22,35 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.backgroundColor = [UIColor whiteColor];
+    [self.window makeKeyAndVisible];
+    
+    ViewController *VC = [[ViewController alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:VC];
+    self.window.rootViewController = nav;
+    
+    
+    [ShareSDK registerApp:@"bfc8be9b35d1"];
+    [ShareSDK connectSinaWeiboWithAppKey:@"955780106"
+                               appSecret:@"81d394377f739a46c8e8e4d4fc192633"
+                             redirectUri:@"http://www.sharesdk.cn"];
+    [Parse setApplicationId:@"HFi1mWdfcDvPLLmx8aa0vr2zSA36ZHv6cpaFEZrF"
+                  clientKey:@"6nWxjp6Vh3YRC0RwmKqzg3BLzeC6UQ0y1lVyTATu"];
+    
     return YES;
+}
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+    return [ShareSDK handleOpenURL:url wxDelegate:nil];
+}
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    return [ShareSDK handleOpenURL:url
+                 sourceApplication:sourceApplication
+                        annotation:annotation
+                        wxDelegate:nil];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
